@@ -1,1 +1,0 @@
-# Mr-Boya-resource
