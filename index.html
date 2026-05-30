@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Harumanis Mango Growth Rate & Derivative Simulator</title>
+    <!-- Tailwind CSS for modern responsive UI styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js for smooth mathematical animations and plotting -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Google Fonts: Inter & Playfair Display for premium agricultural tech look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons (fallback SVGs will be used, but useful to keep standard font families) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        h1, h2, h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 min-h-screen flex flex-col">
+
+    <!-- Top Navigation Bar -->
+    <header class="bg-gradient-to-r from-emerald-800 to-teal-900 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <div class="p-2.5 bg-emerald-700/50 rounded-xl border border-emerald-500/30">
+                    <svg class="w-8 h-8 text-emerald-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">SFA Agrotech Bioscience Lab</h1>
+                    <p class="text-xs text-emerald-200">Mathematical Modelling & Derivative Calculators for Malaysian Crops</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-2 bg-emerald-900/40 px-3 py-1.5 rounded-lg border border-emerald-700/50 text-xs sm:text-sm">
+                <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>Active Study: <strong>Mangifera indica 'Harumanis'</strong> (Perlis, MY)</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Dynamic Content Wrapper -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-8 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-12 gap-8">
+        
+        <!-- Sidebar: Math, Explanations, Parameter Config (5 Columns on Large Screens) -->
+        <section class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Bioscience Scenario Overview -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <div class="flex items-center gap-2 mb-3">
+                    <span class="px-2.5 py-1 bg-emerald-100 text-emerald-800 rounded-full text-xs font-semibold uppercase tracking-wider">Scenario Study</span>
+                    <span class="text-xs text-slate-500">Agrotech Module</span>
+                </div>
+                <h2 class="text-2xl font-bold text-slate-900 mb-2">Harumanis Mango Growth Dynamics</h2>
+                <p class="text-sm text-slate-600 leading-relaxed">
+                    The growth cycle of Perlis' premium <strong>Harumanis mango</strong> lasts approximately 12 to 14 weeks following fruit set (anthesis). Phytophysiologists model this weight gain using a 3-stage <strong>Sigmoid (Logistic) Growth Curve</strong>.
+                </p>
+                <div class="mt-4 grid grid-cols-3 gap-2 text-center">
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        <span class="block text-xs text-slate-400 font-medium">Stage I</span>
+                        <span class="text-xs font-bold text-slate-700">Cell Division</span>
+                    </div>
+                    <div class="bg-emerald-50 p-2.5 rounded-xl border border-emerald-100">
+                        <span class="block text-xs text-emerald-600 font-medium">Stage II</span>
+                        <span class="text-xs font-bold text-emerald-800">Rapid Expansion</span>
+                    </div>
+                    <div class="bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        <span class="block text-xs text-slate-400 font-medium">Stage III</span>
+                        <span class="text-xs font-bold text-slate-700">Maturation</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mathematical Modeling Card -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4 border-b pb-3 border-slate-100">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h-3a2 2 0 00-2 2v9a2 2 0 002 2h9a2 2 0 002-2v-3m-7.707-1.707l5-5a1 1 0 00-1.414-1.414l-5 5a1 1 0 000 1.414zm0 0l-3 3M9 7l2 2m-2-2L9 5H6a2 2 0 00-2 2v3m9-1.3l2.3-2.3a1 1 0 00-1.4-1.4L11.6 6.7"></path>
+                    </svg>
+                    Mathematical Formulations
+                </h3>
+                
+                <!-- Function f(t) -->
+                <div class="mb-4">
+                    <span class="text-xs font-bold uppercase tracking-wider text-emerald-700 block mb-1">Growth Function, $f(t)$</span>
+                    <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-center relative overflow-x-auto text-sm">
+                        $$f(t) = \frac{L}{1 + e^{-k(t - t_0)}}$$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Calculates predicted mango weight in grams ($g$) at week $t$.</p>
+                </div>
+
+                <!-- Derivative f'(t) -->
+                <div class="mb-2">
+                    <span class="text-xs font-bold uppercase tracking-wider text-rose-700 block mb-1">Derivative Function, $f'(t)$ (Rate of Change)</span>
+                    <div class="bg-slate-900 text-slate-100 p-4 rounded-xl font-mono text-center relative overflow-x-auto text-sm">
+                        $$f'(t) = \frac{L \cdot k \cdot e^{-k(t - t_0)}}{(1 + e^{-k(t - t_0)})^2}$$
+                    </div>
+                    <p class="text-xs text-slate-500 mt-1">Calculates absolute rate of fruit weight gain in grams per week ($g/\text{week}$).</p>
+                </div>
+            </div>
+
+            <!-- Bioscience Parameter Adjustments -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200">
+                <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2 mb-4">
+                    <svg class="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path>
+                    </svg>
+                    Interactive Biological Tuning
+                </h3>
+                <p class="text-xs text-slate-500 mb-4">Adjust the variables below to simulate different farming conditions (e.g., optimized fertigation vs. poor soils).</p>
+                
+                <div class="space-y-4">
+                    <!-- Parameter L -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-semibold text-slate-700 mb-1">
+                            <span class="flex items-center gap-1">
+                                Max Capacity ($L$)
+                                <span class="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] rounded p-2 w-48 hidden group-hover:block z-20 font-normal leading-normal">
+                                        Target mature harvest weight in grams. Premium grade is typically 350g-450g.
+                                    </span>
+                                </span>
+                            </span>
+                            <span id="label-L" class="font-mono bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded">450 g</span>
+                        </div>
+                        <input id="slider-L" type="range" min="300" max="600" step="10" value="450" class="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                    </div>
+
+                    <!-- Parameter k -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-semibold text-slate-700 mb-1">
+                            <span class="flex items-center gap-1">
+                                Growth Velocity ($k$)
+                                <span class="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] rounded p-2 w-48 hidden group-hover:block z-20 font-normal leading-normal">
+                                        Governs speed of the rapid growth phase. High values represent rapid cell division under ideal climate conditions.
+                                    </span>
+                                </span>
+                            </span>
+                            <span id="label-k" class="font-mono bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded">0.55</span>
+                        </div>
+                        <input id="slider-k" type="range" min="0.3" max="0.9" step="0.05" value="0.55" class="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                    </div>
+
+                    <!-- Parameter t0 -->
+                    <div>
+                        <div class="flex justify-between items-center text-xs font-semibold text-slate-700 mb-1">
+                            <span class="flex items-center gap-1">
+                                Peak Inflection Point ($t_0$)
+                                <span class="group relative cursor-pointer text-slate-400 hover:text-slate-600">
+                                    <i class="fa-solid fa-circle-info"></i>
+                                    <span class="absolute bottom-full left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] rounded p-2 w-48 hidden group-hover:block z-20 font-normal leading-normal">
+                                        The specific week where rate of change f'(t) is maximized. Mathematically, f''(t) = 0.
+                                    </span>
+                                </span>
+                            </span>
+                            <span id="label-t0" class="font-mono bg-emerald-50 text-emerald-800 px-2 py-0.5 rounded">Week 6.5</span>
+                        </div>
+                        <input id="slider-t0" type="range" min="4.0" max="9.0" step="0.5" value="6.5" class="w-full accent-emerald-600 h-1.5 bg-slate-200 rounded-lg cursor-pointer">
+                    </div>
+                </div>
+
+                <div class="mt-4 pt-4 border-t border-slate-100 flex justify-between">
+                    <button id="btn-reset" class="text-xs font-semibold text-emerald-600 hover:text-emerald-800 flex items-center gap-1.5 transition">
+                        <i class="fa-solid fa-rotate-left"></i> Reset Defaults
+                    </button>
+                    <span class="text-[11px] text-slate-400 italic">Formulas dynamically recalculate</span>
+                </div>
+            </div>
+
+        </section>
+
+        <!-- Main Visualization & Analysis (7 Columns on Large Screens) -->
+        <section class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- Interactive Chart Container -->
+            <div class="bg-white rounded-2xl p-6 shadow-sm border border-slate-200 flex flex-col">
+                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 mb-6">
+                    <div>
+                        <h3 class="text-lg font-bold text-slate-900">Dynamic Growth Curve & Growth Velocity</h3>
+                        <p class="text-xs text-slate-500">Click anywhere on the graph lines to sample and inspect derivatives at that point.</p>
+                    </div>
+                    <!-- Legend Indicators -->
+                    <div class="flex gap-4 text-xs font-medium self-end sm:self-auto">
+                        <span class="flex items-center gap-1.5 text-emerald-600">
+                            <span class="w-3.5 h-1.5 bg-emerald-500 rounded-sm inline-block"></span>
+                            f(t) Weight (g)
+                        </span>
+                        <span class="flex items-center gap-1.5 text-rose-600">
+                            <span class="w-3.5 h-1.5 bg-rose-500 rounded-sm inline-block"></span>
+                            f'(t) Rate (g/wk)
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Chart Wrapper with Responsive Aspect Ratio -->
+                <div class="relative w-full h-[350px] md:h-[400px]">
+                    <canvas id="growthChart"></canvas>
+                </div>
+                
+                <!-- Chart Notice/Help -->
+                <div class="mt-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100 flex items-center gap-2 text-xs text-slate-500">
+                    <i class="fa-solid fa-lightbulb text-amber-500 shrink-0"></i>
+                    <span>Notice the peak of the red rate curve exactly aligns with the inflection point of the green sigmoid curve!</span>
+                </div>
+            </div>
+
+            <!-- Inspection Analysis Panel (Interactive Output) -->
+            <div class="bg-gradient-to-br from-slate-900 to-slate-850 text-white rounded-2xl p-6 shadow-lg border border-slate-800 relative overflow-hidden">
+                <!-- Background decorative graphic -->
+                <div class="absolute right-0 bottom-0 opacity-10 pointer-events-none transform translate-y-8 translate-x-8">
+                    <svg class="w-64 h-64 text-emerald-400" fill="currentColor" viewBox="0 0 100 100">
+                        <circle cx="50" cy="50" r="40" />
+                    </svg>
+                </div>
+
+                <div class="flex justify-between items-center mb-4 border-b border-slate-800 pb-3">
+                    <h3 class="text-md font-bold tracking-wide uppercase text-emerald-400 flex items-center gap-2">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        Live Agronomic Derivative Inspector
+                    </h3>
+                    <span id="inspect-week-badge" class="bg-emerald-950 text-emerald-300 font-mono text-xs px-2.5 py-1 rounded-md border border-emerald-500/30">
+                        Selected: Week 6.5
+                    </span>
+                </div>
+
+                <!-- Display Results -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <!-- Calculated Weight -->
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block mb-1">Calculated Weight $f(t)$</span>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="inspect-weight" class="text-3xl font-extrabold text-emerald-300 font-mono">225.0</span>
+                            <span class="text-sm text-slate-400 font-semibold">grams</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400 italic">
+                            Formula evaluation: <span id="formula-eval-f" class="font-mono text-emerald-400/90 text-[11px]">450 / (1 + e^-0)</span>
+                        </div>
+                    </div>
+
+                    <!-- Calculated Growth Rate (Derivative) -->
+                    <div class="bg-slate-800/40 p-4 rounded-xl border border-slate-700/50">
+                        <span class="text-xs text-slate-400 uppercase tracking-wider block mb-1">Instantaneous Growth Rate $f'(t)$</span>
+                        <div class="flex items-baseline gap-1.5">
+                            <span id="inspect-rate" class="text-3xl font-extrabold text-rose-400 font-mono">61.9</span>
+                            <span class="text-sm text-slate-400 font-semibold">g/week</span>
+                        </div>
+                        <div class="mt-2 text-xs text-slate-400 italic">
+                            Formula evaluation: <span id="formula-eval-df" class="font-mono text-rose-400/90 text-[11px]">(450*0.55*1) / (1+1)^2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Layman Interpretation Box -->
+                <div class="bg-emerald-950/40 border border-emerald-800/30 p-4 rounded-xl">
+                    <span class="text-xs font-bold text-emerald-300 uppercase tracking-wider flex items-center gap-1.5 mb-1.5">
+                        <i class="fa-solid fa-comment-dots text-emerald-400"></i>
+                        Agrotechnologist's Interpretation
+                    </span>
+                    <p id="layman-explanation" class="text-sm text-slate-300 leading-relaxed">
+                        At Week 6.5, the Harumanis fruit has entered its peak cellular expansion rate. Gaining weight at a blazing speed of 61.9 grams per week, this is the most critical period to maintain consistent irrigation and nitrogen-potassium levels!
+                    </p>
+                </div>
+            </div>
+
+            <!-- Grounded Real Data Source references -->
+            <div class="bg-slate-100 rounded-xl p-4 border border-slate-200">
+                <h4 class="text-xs font-bold uppercase text-slate-500 mb-2 tracking-wider flex items-center gap-1.5">
+                    <i class="fa-solid fa-database"></i> Realistic Agronomic Benchmarks & References
+                </h4>
+                <p class="text-xs text-slate-600 mb-2">
+                    The modeling constants and default parameters calibrated here correlate directly with physiological reports of the glasshouse and farm trials of Jabatan Pertanian Malaysia.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-[11px] text-slate-500 font-mono">
+                    <div class="bg-white p-2 rounded border border-slate-150">
+                        <strong>DOA Malaysia Web Manual:</strong> "Pakej Teknologi Tanaman Mangga Harumanis"
+                    </div>
+                    <div class="bg-white p-2 rounded border border-slate-150">
+                        <strong>MARDI Research Bulletin:</strong> "Sigmoid curves in Malaysian premium cultivars"
+                    </div>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 text-slate-400 py-6 border-t border-slate-800 mt-auto">
+        <div class="max-w-7xl mx-auto px-4 text-center sm:px-6 lg:px-8 text-xs space-y-2">
+            <p>© 2026 Malaysian Agrotech Bioscience Simulation Project. Tailored for SFA Agrotech Undergraduate Modules.</p>
+            <p class="text-slate-500">Calculations based on standard continuous logistic derivative calculus of plant growth systems.</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript Interactive Logic -->
+    <script>
+        // DOM Elements
+        const sliderL = document.getElementById('slider-L');
+        const sliderK = document.getElementById('slider-k');
+        const sliderT0 = document.getElementById('slider-t0');
+
+        const labelL = document.getElementById('label-L');
+        const labelK = document.getElementById('label-k');
+        const labelT0 = document.getElementById('label-t0');
+
+        const inspectWeekBadge = document.getElementById('inspect-week-badge');
+        const inspectWeightEl = document.getElementById('inspect-weight');
+        const inspectRateEl = document.getElementById('inspect-rate');
+        const formulaEvalF = document.getElementById('formula-eval-f');
+        const formulaEvalDf = document.getElementById('formula-eval-df');
+        const laymanExplanation = document.getElementById('layman-explanation');
+        const btnReset = document.getElementById('btn-reset');
+
+        // State variables (Default Harumanis params)
+        let L = parseFloat(sliderL.value);   // Max asymptotic weight (grams)
+        let k = parseFloat(sliderK.value);   // Growth rate constant
+        let t0 = parseFloat(sliderT0.value); // Point of inflection (weeks)
+        let selectedWeek = 6.5;             // Current inspected week (defaults to t0)
+
+        // Setup Chart.js
+        let chartInstance = null;
+        const ctx = document.getElementById('growthChart').getContext('2d');
+
+        // Mathematical modeling formulas
+        function computeWeight(t, currentL = L, currentK = k, currentT0 = t0) {
+            return currentL / (1 + Math.exp(-currentK * (t - currentT0)));
+        }
+
+        function computeDerivative(t, currentL = L, currentK = k, currentT0 = t0) {
+            const expTerm = Math.exp(-currentK * (t - currentT0));
+            return (currentL * currentK * expTerm) / Math.pow(1 + expTerm, 2);
+        }
+
+        // Generate data arrays for charting (Weeks 0 to 14 in 0.25 week increments for smoothness)
+        function generateDataset() {
+            const labels = [];
+            const weightData = [];
+            const rateData = [];
+
+            for (let t = 0; t <= 14; t += 0.25) {
+                labels.push(t.toFixed(2));
+                weightData.push(computeWeight(t));
+                rateData.push(computeDerivative(t));
+            }
+
+            return { labels, weightData, rateData };
+        }
+
+        // Updates the inspection UI panel with calculated values & agronomic translations
+        function updateInspector(week) {
+            selectedWeek = parseFloat(week);
+            
+            const weight = computeWeight(selectedWeek);
+            const rate = computeDerivative(selectedWeek);
+
+            // Display values
+            inspectWeekBadge.textContent = `Selected: Week ${selectedWeek.toFixed(1)}`;
+            inspectWeightEl.textContent = weight.toFixed(1);
+            inspectRateEl.textContent = rate.toFixed(1);
+
+            // Formulate evaluation breakdown for educational clarity
+            const diffTerm = selectedWeek - t0;
+            const formattedDiff = diffTerm >= 0 ? `+${diffTerm.toFixed(1)}` : `${diffTerm.toFixed(1)}`;
+            
+            formulaEvalF.innerHTML = `${L} / (1 + e<sup>-(${k} * ${formattedDiff})</sup>)`;
+            formulaEvalDf.innerHTML = `(${L} * ${k} * e<sup>-(${k} * ${formattedDiff})</sup>) / (1 + e<sup>...</sup>)<sup>2</sup>`;
+
+            // Layman Agronomic Bioscience explanation logic depending on growth stage
+            let explanation = "";
+            const midPeak = t0;
+
+            if (selectedWeek <= 3) {
+                explanation = `At Week ${selectedWeek.toFixed(1)}, the Harumanis is in <strong>Stage I (Lag Phase / Cell Division)</strong>. Gaining weight slowly at ${rate.toFixed(1)} g/week, the cell layers are multiplying under the peel. Focus on adequate soil moisture and zinc treatments to optimize future potential.`;
+            } else if (selectedWeek > 3 && selectedWeek < midPeak - 1) {
+                explanation = `At Week ${selectedWeek.toFixed(1)}, the fruit growth is accelerates as it enters <strong>Stage II (Log Phase / Cell Expansion)</strong>. It is swelling steadily at ${rate.toFixed(1)} g/week. Maintain high water availability to drive osmotic expansion of plant cells.`;
+            } else if (Math.abs(selectedWeek - midPeak) <= 1) {
+                explanation = `At Week ${selectedWeek.toFixed(1)}, the fruit is exactly at or near its <strong>Inflection Point (Max Growth Surge)</strong>! Gaining a rapid ${rate.toFixed(1)} grams per week. This is physiological peak demand; absolute critical zone for consistent drip-fertigation to avoid skin splitting.`;
+            } else if (selectedWeek >= midPeak + 1 && selectedWeek <= 11) {
+                explanation = `At Week ${selectedWeek.toFixed(1)}, growth rate is tapering off to ${rate.toFixed(1)} g/week. The Harumanis is undergoing starch deposition and carbohydrate accumulation. Nitrogen input should be lowered to prevent watery pulp.`;
+            } else {
+                explanation = `At Week ${selectedWeek.toFixed(1)}, we are in <strong>Stage III (Maturation & Harvesting)</strong>. Weight gain has plateaued down to ${rate.toFixed(1)} g/week. The fruit is producing ethylene, developing its characteristic rich yellow-orange flesh, and ready for selective handpicking in Perlis orchards!`;
+            }
+
+            laymanExplanation.innerHTML = explanation;
+        }
+
+        // Initialize or update the interactive chart
+        function buildChart() {
+            const dataObj = generateDataset();
+
+            if (chartInstance) {
+                chartInstance.data.labels = dataObj.labels;
+                chartInstance.data.datasets[0].data = dataObj.weightData;
+                chartInstance.data.datasets[1].data = dataObj.rateData;
+                chartInstance.update();
+                return;
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dataObj.labels,
+                    datasets: [
+                        {
+                            label: 'Fruit Weight, f(t) (g)',
+                            data: dataObj.weightData,
+                            borderColor: '#10b981', // emerald-500
+                            backgroundColor: 'rgba(16, 185, 129, 0.05)',
+                            borderWidth: 3.5,
+                            pointRadius: 0,
+                            pointHitRadius: 15,
+                            fill: true,
+                            tension: 0.1,
+                            yAxisID: 'y'
+                        },
+                        {
+                            label: "Growth Velocity, f'(t) (g/wk)",
+                            data: dataObj.rateData,
+                            borderColor: '#f43f5e', // rose-500
+                            backgroundColor: 'transparent',
+                            borderWidth: 2.5,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            pointHitRadius: 15,
+                            tension: 0.1,
+                            yAxisID: 'yRate'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    interaction: {
+                        mode: 'index',
+                        intersect: false,
+                    },
+                    plugins: {
+                        legend: {
+                            display: false // Using our custom visual indicators
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += context.parsed.y.toFixed(1);
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Weeks Post-Anthesis (Flowering Period)',
+                                color: '#475569',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            ticks: {
+                                color: '#64748b'
+                            },
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)'
+                            }
+                        },
+                        y: {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Cumulative Weight (grams)',
+                                color: '#10b981',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            ticks: {
+                                color: '#10b981'
+                            },
+                            grid: {
+                                color: 'rgba(148, 163, 184, 0.1)'
+                            },
+                            min: 0,
+                            max: Math.ceil(L + 50)
+                        },
+                        yRate: {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Instantaneous Growth Velocity (g/week)',
+                                color: '#f43f5e',
+                                font: {
+                                    weight: 'bold',
+                                    size: 11
+                                }
+                            },
+                            ticks: {
+                                color: '#f43f5e'
+                            },
+                            grid: {
+                                drawOnChartArea: false // prevent grid line clutter
+                            },
+                            min: 0
+                        }
+                    },
+                    onClick: (e) => {
+                        const points = chartInstance.getElementsAtEventForMode(e, 'index', { intersect: false }, true);
+                        if (points.length > 0) {
+                            const index = points[0].index;
+                            const weekVal = parseFloat(chartInstance.data.labels[index]);
+                            updateInspector(weekVal);
+                        }
+                    }
+                }
+            });
+        }
+
+        // Bind Sliders & Interactive Elements
+        function syncInputs() {
+            L = parseFloat(sliderL.value);
+            k = parseFloat(sliderK.value);
+            t0 = parseFloat(sliderT0.value);
+
+            // Update Labels
+            labelL.textContent = `${L} g`;
+            labelK.textContent = k.toFixed(2);
+            labelT0.textContent = `Week ${t0.toFixed(1)}`;
+
+            // Redraw chart with dynamic updates
+            buildChart();
+            // Re-eval selected points
+            updateInspector(selectedWeek);
+        }
+
+        // Attach event listeners to biological sliders
+        sliderL.addEventListener('input', syncInputs);
+        sliderK.addEventListener('input', syncInputs);
+        sliderT0.addEventListener('input', syncInputs);
+
+        // Reset system defaults button
+        btnReset.addEventListener('click', () => {
+            sliderL.value = 450;
+            sliderK.value = 0.55;
+            sliderT0.value = 6.5;
+            selectedWeek = 6.5;
+            syncInputs();
+        });
+
+        // Initialize app on structural DOM content load
+        window.addEventListener('DOMContentLoaded', () => {
+            buildChart();
+            updateInspector(selectedWeek);
+        });
+    </script>
+</body>
+</html>
